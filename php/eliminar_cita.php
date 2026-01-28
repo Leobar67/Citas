@@ -14,8 +14,7 @@ if (!isset($_POST['id'])) {
 
 $id = (int)$_POST['id'];
 
-$stmt = $conexion->prepare("DELETE FROM citas WHERE id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
+$stmt = $conexion->prepare("DELETE FROM citas WHERE id = :id");
+$stmt->execute([':id' => $id]);
 
 echo "ok";
