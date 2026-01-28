@@ -1,0 +1,102 @@
+/* ================== RESET ================== */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+}
+
+/* ================== COLORES INSTITUCIONALES ================== */
+:root {
+    --utnc: #00A78B;
+    --utnc-dark: #008f76;
+}
+
+/* ================== HEADER Y FOOTER ================== */
+header, footer,
+.bg-utnc {
+    background-color: var(--utnc);
+    color: #fff;
+}
+
+.header-utnc {
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+
+/* ================== TEXTOS ================== */
+.text-utnc {
+    color: var(--utnc) !important;
+}
+
+h1, h3, h5 {
+    font-weight: bold;
+}
+
+/* ================== BOTONES ================== */
+.btn-utnc {
+    background-color: var(--utnc);
+    border-color: var(--utnc);
+    color: #fff;
+}
+
+.btn-utnc:hover {
+    background-color: var(--utnc-dark);
+    border-color: var(--utnc-dark);
+    color: #fff;
+}
+
+.btn-success {
+    background-color: var(--utnc);
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: var(--utnc-dark);
+}
+
+/* ================== TARJETAS ================== */
+.card {
+    border-radius: 18px;
+}
+
+/* ================== FORMULARIOS ================== */
+label {
+    font-weight: 600;
+}
+
+.form-control-lg,
+.form-select-lg {
+    border-radius: 10px;
+}
+
+/* ================== TABLAS ================== */
+.table-utnc thead {
+    background-color: var(--utnc);
+    color: #fff;
+}
+
+/* ================== CALENDARIO ================== */
+.dia-habil {
+    background-color: var(--utnc) !important;
+    color: #fff !important;
+    border-radius: 50%;
+}
+
+/* ================== ALERTAS ================== */
+.alert {
+    border-radius: 12px;
+}
+
+/* ================== UTILIDADES ================== */
+.shadow-lg {
+    box-shadow: 0 10px 30px rgba(0,0,0,.15) !important;
+}
