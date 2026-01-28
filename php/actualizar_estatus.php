@@ -7,8 +7,10 @@ include("../conexion.php");
 $id = $_POST['id'];
 $estatus = $_POST['estatus'];
 
-$sql = $conexion->prepare(
-    "UPDATE citas SET estatus = ? WHERE id = ?"
-);
-$sql->bind_param("si", $estatus, $id);
-$sql->execute();
+$stmt = $conexion->prepare("UPDATE citas SET estatus = :estatus WHERE id = :id");
+$stmt->execute([
+    ':estatus' => $estatus,
+    ':id' => $id
+]);
+
+echo "ok";
