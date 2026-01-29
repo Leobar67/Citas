@@ -100,3 +100,30 @@ label {
 .shadow-lg {
     box-shadow: 0 10px 30px rgba(0,0,0,.15) !important;
 }
+/* ================== FIX HEADER & FOOTER MOBILE ================== */
+header,
+footer {
+    width: 100%;
+    background-color: #00a78b !important;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.bg-utnc {
+    background-color: #00a78b !important;
+}
+
+body {
+    overflow-x: hidden;
+}
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
