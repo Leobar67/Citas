@@ -37,29 +37,29 @@
 
 <div class="row">
 <div class="col-md-6 mb-3">
-<label class="form-label">Matrícula</label>
-<input type="text" name="matricula" class="form-control form-control-lg" required>
+<label for="matricula" class="form-label">Matrícula</label>
+<input id="matricula" name="matricula" type="text" class="form-control form-control-lg" required>
 </div>
 
 <div class="col-md-6 mb-3">
-<label class="form-label">Teléfono</label>
-<input type="tel" name="telefono" class="form-control form-control-lg" required>
+<label for="telefono" class="form-label">Teléfono</label>
+<input id="telefono" name="telefono" type="tel" class="form-control form-control-lg" required>
 </div>
 </div>
 
 <div class="mb-3">
-<label class="form-label">Nombre completo</label>
-<input type="text" name="nombre" class="form-control form-control-lg" required>
+<label for="nombre" class="form-label">Nombre completo</label>
+<input id="nombre" name="nombre" type="text" class="form-control form-control-lg" required>
 </div>
 
 <div class="mb-3">
-<label class="form-label">Programa educativo</label>
-<input type="text" name="programa" class="form-control form-control-lg" required>
+<label for="programa" class="form-label">Programa educativo</label>
+<input id="programa" name="programa" type="text" class="form-control form-control-lg" required>
 </div>
 
 <div class="mb-3">
-<label class="form-label">Trámite</label>
-<select name="tramite" class="form-select form-select-lg" required>
+<label for="tramite" class="form-label">Trámite</label>
+<select id="tramite" name="tramite" class="form-select form-select-lg" required>
 <option value="">Seleccione</option>
 <option>Recoger título Técnico Superior Universitario</option>
 <option>Recoger título Ingeniería</option>
@@ -222,3 +222,4 @@ function mostrar(r){
 
 </body>
 </html>
+
