@@ -26,6 +26,8 @@ if ($filtroFecha) {
 
 /* IMPORTANTE: traer TODO en un arreglo */
 $citas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+/* ESTATUS DISPONIBLES */
+$estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -230,3 +232,4 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
