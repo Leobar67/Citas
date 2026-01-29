@@ -1,9 +1,12 @@
 <?php
 include("../conexion.php");
 
-$dias = [];
+$stmt = $conexion->prepare(
+    "SELECT valor FROM configuracion WHERE tipo='dia_habil'"
+);
+$stmt->execute();
 
-$stmt = $conexion->query("SELECT valor FROM configuracion WHERE tipo='dia_habil'");
+$dias = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $dias[] = (int)$row['valor'];
 }
