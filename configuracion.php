@@ -4,6 +4,7 @@ if (!isset($_SESSION['admin'])) {
     header("Location: php/login.php");
     exit;
 }
+
 include("conexion.php");
 
 /* ================== GUARDAR CONFIGURACIÓN ================== */
@@ -11,21 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* FESTIVOS */
     if (!empty($_POST['festivo'])) {
-        $sql = $conexion->prepare(
-            "INSERT INTO configuracion (tipo, valor) VALUES ('festivo', ?)"
+        $stmt = $conexion->prepare(
+            "INSERT INTO configuracion (tipo, valor) VALUES ('festivo', :valor)"
         );
-        $sql->bind_param("s", $_POST['festivo']);
-        $sql->execute();
+        $stmt->execute([':valor' => $_POST['festivo']]);
     }
 
     /* HORARIOS BLOQUEADOS */
     if (!empty($_POST['bloqueo_inicio']) && !empty($_POST['bloqueo_fin'])) {
         $rango = $_POST['bloqueo_inicio'] . '-' . $_POST['bloqueo_fin'];
-        $sql = $conexion->prepare(
-            "INSERT INTO configuracion (tipo, valor) VALUES ('horario_bloqueado', ?)"
+        $stmt = $conexion->prepare(
+            "INSERT INTO configuracion (tipo, valor) VALUES ('horario_bloqueado', :valor)"
         );
-        $sql->bind_param("s", $rango);
-        $sql->execute();
+        $stmt->execute([':valor' => $rango]);
     }
 
     /* HORARIO DEL TURNO */
@@ -35,17 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "DELETE FROM configuracion WHERE tipo IN ('turno_inicio','turno_fin')"
         );
 
-        $sql = $conexion->prepare(
-            "INSERT INTO configuracion (tipo, valor) VALUES (?, ?)"
+        $stmt = $conexion->prepare(
+            "INSERT INTO configuracion (tipo, valor) VALUES (:tipo, :valor)"
         );
 
-        $tipo = 'turno_inicio';
-        $sql->bind_param("ss", $tipo, $_POST['turno_inicio']);
-        $sql->execute();
+        $stmt->execute([
+            ':tipo'  => 'turno_inicio',
+            ':valor' => $_POST['turno_inicio']
+        ]);
 
-        $tipo = 'turno_fin';
-        $sql->bind_param("ss", $tipo, $_POST['turno_fin']);
-        $sql->execute();
+        $stmt->execute([
+            ':tipo'  => 'turno_fin',
+            ':valor' => $_POST['turno_fin']
+        ]);
     }
 
     /* DÍAS HÁBILES */
@@ -55,12 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "DELETE FROM configuracion WHERE tipo='dia_habil'"
         );
 
+        $stmt = $conexion->prepare(
+            "INSERT INTO configuracion (tipo, valor) VALUES ('dia_habil', :valor)"
+        );
+
         foreach ($_POST['dias'] as $dia) {
-            $sql = $conexion->prepare(
-                "INSERT INTO configuracion (tipo, valor) VALUES ('dia_habil', ?)"
-            );
-            $sql->bind_param("s", $dia);
-            $sql->execute();
+            $stmt->execute([':valor' => $dia]);
         }
     }
 
@@ -70,36 +71,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 /* ================== ELIMINAR ================== */
 if (isset($_GET['eliminar'])) {
-    $id = (int)$_GET['eliminar'];
-    $conexion->query("DELETE FROM configuracion WHERE id=$id");
+    $stmt = $conexion->prepare(
+        "DELETE FROM configuracion WHERE id = :id"
+    );
+    $stmt->execute([':id' => (int)$_GET['eliminar']]);
+
     header("Location: configuracion.php");
     exit;
 }
 
 /* ================== CONSULTAS ================== */
 $festivos = $conexion->query(
-    "SELECT * FROM configuracion WHERE tipo='festivo'"
+    "SELECT * FROM configuracion WHERE tipo='festivo' ORDER BY valor"
 );
 
 $bloqueos = $conexion->query(
-    "SELECT * FROM configuracion WHERE tipo='horario_bloqueado'"
+    "SELECT * FROM configuracion WHERE tipo='horario_bloqueado' ORDER BY valor"
 );
 
+/* TURNO */
 $turnoInicio = $conexion->query(
     "SELECT valor FROM configuracion WHERE tipo='turno_inicio' LIMIT 1"
-)->fetch_assoc()['valor'] ?? '08:00';
+)->fetchColumn() ?: '08:00';
 
 $turnoFin = $conexion->query(
     "SELECT valor FROM configuracion WHERE tipo='turno_fin' LIMIT 1"
-)->fetch_assoc()['valor'] ?? '15:30';
+)->fetchColumn() ?: '15:30';
 
-$diasHabilitados = [];
-$res = $conexion->query(
+/* DÍAS HÁBILES */
+$stmt = $conexion->query(
     "SELECT valor FROM configuracion WHERE tipo='dia_habil'"
 );
-while ($d = $res->fetch_assoc()) {
-    $diasHabilitados[] = $d['valor'];
-}
+$diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -134,9 +137,9 @@ while ($d = $res->fetch_assoc()) {
 </form>
 
 <ul class="list-group">
-<?php while($f = $festivos->fetch_assoc()): ?>
+<?php while($f = $festivos->fetch(PDO::FETCH_ASSOC)): ?>
 <li class="list-group-item d-flex justify-content-between">
-    <?= $f['valor'] ?>
+    <?= htmlspecialchars($f['valor']) ?>
     <a href="?eliminar=<?= $f['id'] ?>" class="btn btn-sm btn-danger">✖</a>
 </li>
 <?php endwhile; ?>
@@ -164,9 +167,9 @@ while ($d = $res->fetch_assoc()) {
 </form>
 
 <ul class="list-group">
-<?php while($b = $bloqueos->fetch_assoc()): ?>
+<?php while($b = $bloqueos->fetch(PDO::FETCH_ASSOC)): ?>
 <li class="list-group-item d-flex justify-content-between">
-    <?= $b['valor'] ?>
+    <?= htmlspecialchars($b['valor']) ?>
     <a href="?eliminar=<?= $b['id'] ?>" class="btn btn-sm btn-danger">✖</a>
 </li>
 <?php endwhile; ?>
@@ -222,7 +225,7 @@ foreach ($dias as $num => $nombre):
            type="checkbox"
            name="dias[]"
            value="<?= $num ?>"
-           <?= in_array($num, $diasHabilitados) ? 'checked' : '' ?>>
+           <?= in_array((string)$num, $diasHabilitados) ? 'checked' : '' ?>>
     <label class="form-check-label"><?= $nombre ?></label>
 </div>
 <?php endforeach; ?>
