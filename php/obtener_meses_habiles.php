@@ -1,8 +1,14 @@
 <?php
 require_once "../conexion.php";
 
-$meses = $conexion->query(
-    "SELECT valor FROM configuracion WHERE tipo = 'mes_habil'"
-)->fetchAll(PDO::FETCH_COLUMN);
+$meses = [];
 
-echo json_encode(array_map('intval', $meses));
+$res = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'mes_habil'"
+);
+
+while ($m = $res->fetch(PDO::FETCH_ASSOC)) {
+    $meses[] = (int)$m['valor'];
+}
+
+echo json_encode($meses);
