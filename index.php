@@ -59,18 +59,20 @@
 
 <div class="mb-3">
 <label for="tramite" class="form-label">Trámite</label>
-<select id="tramite" name="tramite" class="form-select form-select-lg" required>
-<option value="">Seleccione</option>
-<option>Recoger título Técnico Superior Universitario</option>
-<option>Recoger título Ingeniería</option>
-<option>Recoger título Licenciatura</option>
-<option>Tramitar título Técnico Superior Universitario</option>
-<option>Tramitar título Ingeniería</option>
-<option>Tramitar título Licenciatura</option>
-<option>Recoger papelería</option>
+<select  id="tramite" name="tramite" class="form-select form-select-lg" required>
+<option value="#">Seleccione</option>
+<option value="1">Recoger título Técnico Superior Universitario</option>
+<option value="2">Recoger título Ingeniería</option>
+<option value="3">Recoger título Licenciatura</option>
+<option value="4">Tramitar título Técnico Superior Universitario</option>
+<option value="5">Tramitar título Ingeniería</option>
+<option value="6">Tramitar título Licenciatura</option>
+<option value="7">Recoger papelería</option>
 </select>
 </div>
 
+
+    
 <div class="row">
 <div class="col-md-6 mb-3">
 <label class="form-label">Fecha</label>
@@ -222,4 +224,5 @@ function mostrar(r){
 
 </body>
 </html>
+
 
