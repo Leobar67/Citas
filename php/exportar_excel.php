@@ -5,12 +5,12 @@ if (!isset($_SESSION['admin'])) exit;
 include("../conexion.php");
 
 $tramites = [
-    1 => 'Rect TSU',
-    2 => 'Rect Ingeniería',
-    3 => 'Rect Licenciatura',
-    4 => 'Trat TSU',
-    5 => 'Trat Ingeniería',
-    6 => 'Trat Licenciatura',
+    1 => 'Rec T TSU',
+    2 => 'Rec T Ingeniería',
+    3 => 'Rec T Licenciatura',
+    4 => 'Tra T TSU',
+    5 => 'Tra T Ingeniería',
+    6 => 'Tra T Licenciatura',
     7 => 'Rec papelería'
 ];
 
@@ -54,5 +54,6 @@ foreach ($resultado as $c) {
 
 echo "</table>";
 exit;
+
 
 
