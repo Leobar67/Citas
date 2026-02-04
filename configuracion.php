@@ -142,122 +142,171 @@ $diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
 </nav>
 
 <main class="container my-4 flex-grow-1">
-<div class="row g-4">
 
-<!-- FESTIVOS -->
-<div class="col-md-6">
-<div class="card shadow">
-<div class="card-body">
-<h5 class="text-utnc fw-bold">Días festivos</h5>
+<!-- ================= FILA 1 ================= -->
+<div class="row g-4 mb-4">
 
-<form method="POST" class="d-flex gap-2 mb-3">
-    <input type="date" name="festivo" class="form-control" required>
-    <button class="btn btn-utnc">Agregar</button>
-</form>
+    <!-- FESTIVOS -->
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="text-utnc fw-bold">Días festivos</h5>
 
-<ul class="list-group">
-<?php while($f = $festivos->fetch(PDO::FETCH_ASSOC)): ?>
-<li class="list-group-item d-flex justify-content-between">
-    <?= htmlspecialchars($f['valor']) ?>
-    <a href="?eliminar=<?= $f['id'] ?>" class="btn btn-sm btn-danger">✖</a>
-</li>
-<?php endwhile; ?>
-</ul>
-</div>
-</div>
-</div>
+                <form method="POST" class="d-flex gap-2 mb-3">
+                    <input type="date" name="festivo" class="form-control" required>
+                    <button class="btn btn-utnc">Agregar</button>
+                </form>
 
-<!-- HORARIOS BLOQUEADOS -->
-<div class="col-md-6">
-<div class="card shadow">
-<div class="card-body">
-<h5 class="text-utnc fw-bold">Horarios restringidos</h5>
-
-<form method="POST" class="row g-2 mb-3">
-    <div class="col">
-        <input type="time" name="bloqueo_inicio" class="form-control" required>
+                <ul class="list-group">
+                <?php while($f = $festivos->fetch_assoc()): ?>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <?= $f['valor'] ?>
+                        <a href="?eliminar=<?= $f['id'] ?>" class="btn btn-sm btn-danger">✖</a>
+                    </li>
+                <?php endwhile; ?>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="col">
-        <input type="time" name="bloqueo_fin" class="form-control" required>
+
+    <!-- HORARIOS BLOQUEADOS -->
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="text-utnc fw-bold">Horarios restringidos</h5>
+
+                <form method="POST" class="row g-2 mb-3">
+                    <div class="col">
+                        <input type="time" name="bloqueo_inicio" class="form-control" required>
+                    </div>
+                    <div class="col">
+                        <input type="time" name="bloqueo_fin" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-utnc w-100">Agregar</button>
+                    </div>
+                </form>
+
+                <ul class="list-group">
+                <?php while($b = $bloqueos->fetch_assoc()): ?>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <?= $b['valor'] ?>
+                        <a href="?eliminar=<?= $b['id'] ?>" class="btn btn-sm btn-danger">✖</a>
+                    </li>
+                <?php endwhile; ?>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="col-12">
-        <button class="btn btn-utnc w-100">Agregar</button>
+
+</div>
+
+<!-- ================= FILA 2 ================= -->
+<div class="row g-4 mb-4">
+
+    <!-- HORARIO DEL TURNO -->
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="text-utnc fw-bold">Horario del turno</h5>
+
+                <form method="POST" class="row g-2">
+                    <div class="col">
+                        <input type="time" name="turno_inicio" class="form-control"
+                               value="<?= $turnoInicio ?>" required>
+                    </div>
+                    <div class="col">
+                        <input type="time" name="turno_fin" class="form-control"
+                               value="<?= $turnoFin ?>" required>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-utnc w-100">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
 
-<ul class="list-group">
-<?php while($b = $bloqueos->fetch(PDO::FETCH_ASSOC)): ?>
-<li class="list-group-item d-flex justify-content-between">
-    <?= htmlspecialchars($b['valor']) ?>
-    <a href="?eliminar=<?= $b['id'] ?>" class="btn btn-sm btn-danger">✖</a>
-</li>
-<?php endwhile; ?>
-</ul>
-</div>
-</div>
-</div>
+    <!-- DÍAS HÁBILES -->
+    <div class="col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="text-utnc fw-bold">Días habilitados</h5>
 
-<!-- HORARIO DEL TURNO -->
-<div class="col-md-6">
-<div class="card shadow">
-<div class="card-body">
-<h5 class="text-utnc fw-bold">Horario del turno</h5>
+                <form method="POST">
+                <?php
+                $dias = [
+                    0 => 'Domingo',
+                    1 => 'Lunes',
+                    2 => 'Martes',
+                    3 => 'Miércoles',
+                    4 => 'Jueves',
+                    5 => 'Viernes',
+                    6 => 'Sábado'
+                ];
+                foreach ($dias as $num => $nombre):
+                ?>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="dias[]"
+                               value="<?= $num ?>"
+                               <?= in_array($num, $diasHabilitados) ? 'checked' : '' ?>>
+                        <label class="form-check-label"><?= $nombre ?></label>
+                    </div>
+                <?php endforeach; ?>
 
-<form method="POST" class="row g-2">
-    <div class="col">
-        <input type="time" name="turno_inicio" class="form-control"
-               value="<?= $turnoInicio ?>" required>
+                <button class="btn btn-utnc mt-3 w-100">
+                    Guardar días habilitados
+                </button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="col">
-        <input type="time" name="turno_fin" class="form-control"
-               value="<?= $turnoFin ?>" required>
+
+</div>
+
+<!-- ================= FILA 3 ================= -->
+<div class="row g-4 justify-content-center">
+
+    <!-- MESES HABILITADOS -->
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border border-2 border-success">
+            <div class="card-body">
+                <h5 class="text-utnc fw-bold text-center">Meses habilitados</h5>
+
+                <form method="POST">
+                <input type="hidden" name="guardar_meses" value="1">
+
+                <?php
+                $meses = [
+                    1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+                    5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+                    9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+                ];
+
+                foreach ($meses as $num => $nombre):
+                ?>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="meses[]"
+                               value="<?= $num ?>"
+                               <?= in_array((string)$num, $mesesHabilitados, true) ? 'checked' : '' ?>>
+                        <label class="form-check-label"><?= $nombre ?></label>
+                    </div>
+                <?php endforeach; ?>
+
+                <button class="btn btn-utnc mt-3 w-100">
+                    Guardar meses habilitados
+                </button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="col-12">
-        <button class="btn btn-utnc w-100">Guardar</button>
-    </div>
-</form>
-</div>
-</div>
-</div>
-
-<!-- DÍAS HÁBILES -->
-<div class="col-md-6">
-<div class="card shadow">
-<div class="card-body">
-<h5 class="text-utnc fw-bold">Días habilitados</h5>
-
-<form method="POST">
-<?php
-$dias = [
-    0 => 'Domingo',
-    1 => 'Lunes',
-    2 => 'Martes',
-    3 => 'Miércoles',
-    4 => 'Jueves',
-    5 => 'Viernes',
-    6 => 'Sábado'
-];
-foreach ($dias as $num => $nombre):
-?>
-<div class="form-check">
-    <input class="form-check-input"
-           type="checkbox"
-           name="dias[]"
-           value="<?= $num ?>"
-           <?= in_array((string)$num, $diasHabilitados) ? 'checked' : '' ?>>
-    <label class="form-check-label"><?= $nombre ?></label>
-</div>
-<?php endforeach; ?>
-
-<button class="btn btn-utnc mt-3 w-100">
-    Guardar días habilitados
-</button>
-</form>
-</div>
-</div>
-</div>
 
 </div>
+
 </main>
 
 <footer class="text-center py-3 bg-utnc text-white">
@@ -266,4 +315,5 @@ foreach ($dias as $num => $nombre):
 
 </body>
 </html>
+
 
