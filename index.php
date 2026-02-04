@@ -116,19 +116,23 @@ let bloqueos = [];
 let diasHabiles = [];
 let turnoInicio = "08:00";
 let turnoFin = "15:30";
+let mesesHabiles = [];   
 
 /* CARGAR CONFIGURACIÓN */
 Promise.all([
     fetch('php/obtener_festivos.php').then(r=>r.json()),
     fetch('php/obtener_horarios_bloqueados.php').then(r=>r.json()),
     fetch('php/obtener_dias_habiles.php').then(r=>r.json()),
-    fetch('php/obtener_turno.php').then(r=>r.json())
-]).then(([f,b,d,t])=>{
+    fetch('php/obtener_turno.php').then(r=>r.json()),
+    fetch('php/obtener_meses_habiles.php').then(r=>r.json())
+]).then(([f,b,d,t,m])=>{
     festivos = f;
     bloqueos = b;
     diasHabiles = d.map(Number);
     turnoInicio = t.inicio;
     turnoFin = t.fin;
+    mesesHabiles = m;
+
     iniciarCalendario();
 });
 
@@ -138,8 +142,14 @@ function iniciarCalendario() {
         dateFormat: "Y-m-d",
         minDate: "today",
         disable: [
+            // ❌ Bloquear días no habilitados
             d => !diasHabiles.includes(d.getDay()),
-            d => festivos.includes(d.toISOString().split('T')[0])
+
+            // ❌ Bloquear festivos
+            d => festivos.includes(d.toISOString().split('T')[0]),
+
+            // ❌ Bloquear meses NO habilitados
+            d => !mesesHabiles.includes(d.getMonth() + 1)
         ],
         onDayCreate(_,__,___,day){
             if (!day.classList.contains("flatpickr-disabled")) {
@@ -224,5 +234,6 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
