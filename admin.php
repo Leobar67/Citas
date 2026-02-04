@@ -7,6 +7,16 @@ if (!isset($_SESSION['admin'])) {
 
 include("conexion.php");
 
+$tramites = [
+    1 => 'Rect TSU',
+    2 => 'Rect Ingeniería',
+    3 => 'Rect Licenciatura',
+    4 => 'Trat TSU',
+    5 => 'Trat Ingeniería',
+    6 => 'Trat Licenciatura',
+    7 => 'Rec papelería'
+];
+
 /* FILTROS */
 $filtroFecha = $_GET['fecha'] ?? '';
 $vista = $_GET['vista'] ?? 'cards';
@@ -124,7 +134,7 @@ $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 <p><strong>Matrícula:</strong> <?= $c['matricula'] ?></p>
 <p><strong>Teléfono:</strong> <?= $c['telefono'] ?></p>
 <p><strong>Programa:</strong> <?= $c['programa'] ?></p>
-<p><strong>Trámite:</strong> <?= $c['tramite'] ?></p>
+<p><strong>Trámite:</strong> <?= $tramites[$c['tramite']] ?? 'Desconocido' ?></p>
 <p><strong>Fecha:</strong> <?= $c['fecha'] ?></p>
 <p><strong>Hora:</strong> <?= $c['hora'] ?></p>
 
@@ -171,7 +181,7 @@ Eliminar
 <td><?= $c['nombre'] ?></td>
 <td><?= $c['telefono'] ?></td>
 <td><?= $c['programa'] ?></td>
-<td><?= $c['tramite'] ?></td>
+<td><?= $tramites[$c['tramite']] ?? 'Desconocido' ?></td>
 <td><?= $c['fecha'] ?></td>
 <td><?= $c['hora'] ?></td>
 <td>
@@ -232,4 +242,5 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
 
