@@ -4,6 +4,16 @@ if (!isset($_SESSION['admin'])) exit;
 
 include("../conexion.php");
 
+$tramites = [
+    1 => 'Rect TSU',
+    2 => 'Rect Ingeniería',
+    3 => 'Rect Licenciatura',
+    4 => 'Trat TSU',
+    5 => 'Trat Ingeniería',
+    6 => 'Trat Licenciatura',
+    7 => 'Rec papelería'
+];
+
 $fecha = $_GET['fecha'] ?? null;
 
 $sql = "SELECT matricula, nombre, telefono, programa, tramite, fecha, hora, estatus FROM citas";
@@ -44,3 +54,4 @@ foreach ($resultado as $c) {
 
 echo "</table>";
 exit;
+
