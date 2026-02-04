@@ -65,6 +65,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    /* MESES HÁBILES */
+if (isset($_POST['guardar_meses'])) {
+
+    // 🔥 Siempre borrar primero
+    $conexion->query(
+        "DELETE FROM configuracion WHERE tipo='mes_habil'"
+    );
+
+    // ✅ Solo insertar si vienen meses marcados
+    if (!empty($_POST['meses'])) {
+        foreach ($_POST['meses'] as $mes) {
+            $sql = $conexion->prepare(
+                "INSERT INTO configuracion (tipo, valor) VALUES ('mes_habil', ?)"
+            );
+            $sql->bind_param("s", $mes);
+            $sql->execute();
+        }
+    }
+}
     header("Location: configuracion.php");
     exit;
 }
@@ -247,3 +266,4 @@ foreach ($dias as $num => $nombre):
 
 </body>
 </html>
+
