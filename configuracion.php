@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-include("conexion.php");
+require_once "conexion.php";
 
 /* ================== GUARDAR CONFIGURACIÓN ================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* HORARIO DEL TURNO */
     if (!empty($_POST['turno_inicio']) && !empty($_POST['turno_fin'])) {
 
-        $conexion->query(
+        $conexion->exec(
             "DELETE FROM configuracion WHERE tipo IN ('turno_inicio','turno_fin')"
         );
 
@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* DÍAS HÁBILES */
     if (isset($_POST['dias'])) {
 
-        $conexion->query(
-            "DELETE FROM configuracion WHERE tipo='dia_habil'"
+        $conexion->exec(
+            "DELETE FROM configuracion WHERE tipo = 'dia_habil'"
         );
 
         $stmt = $conexion->prepare(
@@ -66,24 +66,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /* MESES HÁBILES */
-if (isset($_POST['guardar_meses'])) {
+    if (isset($_POST['guardar_meses'])) {
 
-    // 🔥 Siempre borrar primero
-    $conexion->query(
-        "DELETE FROM configuracion WHERE tipo='mes_habil'"
-    );
+        $conexion->exec(
+            "DELETE FROM configuracion WHERE tipo = 'mes_habil'"
+        );
 
-    // ✅ Solo insertar si vienen meses marcados
-    if (!empty($_POST['meses'])) {
-        foreach ($_POST['meses'] as $mes) {
-            $sql = $conexion->prepare(
-                "INSERT INTO configuracion (tipo, valor) VALUES ('mes_habil', ?)"
+        if (!empty($_POST['meses'])) {
+            $stmt = $conexion->prepare(
+                "INSERT INTO configuracion (tipo, valor) VALUES ('mes_habil', :valor)"
             );
-            $sql->bind_param("s", $mes);
-            $sql->execute();
+
+            foreach ($_POST['meses'] as $mes) {
+                $stmt->execute([':valor' => $mes]);
+            }
         }
     }
-}
+
     header("Location: configuracion.php");
     exit;
 }
@@ -101,27 +100,28 @@ if (isset($_GET['eliminar'])) {
 
 /* ================== CONSULTAS ================== */
 $festivos = $conexion->query(
-    "SELECT * FROM configuracion WHERE tipo='festivo' ORDER BY valor"
+    "SELECT id, valor FROM configuracion WHERE tipo = 'festivo' ORDER BY valor"
 );
 
 $bloqueos = $conexion->query(
-    "SELECT * FROM configuracion WHERE tipo='horario_bloqueado' ORDER BY valor"
+    "SELECT id, valor FROM configuracion WHERE tipo = 'horario_bloqueado' ORDER BY valor"
 );
 
-/* TURNO */
 $turnoInicio = $conexion->query(
-    "SELECT valor FROM configuracion WHERE tipo='turno_inicio' LIMIT 1"
+    "SELECT valor FROM configuracion WHERE tipo = 'turno_inicio' LIMIT 1"
 )->fetchColumn() ?: '08:00';
 
 $turnoFin = $conexion->query(
-    "SELECT valor FROM configuracion WHERE tipo='turno_fin' LIMIT 1"
+    "SELECT valor FROM configuracion WHERE tipo = 'turno_fin' LIMIT 1"
 )->fetchColumn() ?: '15:30';
 
-/* DÍAS HÁBILES */
-$stmt = $conexion->query(
-    "SELECT valor FROM configuracion WHERE tipo='dia_habil'"
-);
-$diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
+$diasHabilitados = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'dia_habil'"
+)->fetchAll(PDO::FETCH_COLUMN);
+
+$mesesHabilitados = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'mes_habil'"
+)->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -158,7 +158,7 @@ $diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
                 </form>
 
                 <ul class="list-group">
-                <?php while($f = $festivos->fetch_assoc()): ?>
+                <?php while ($f = $festivos->fetch(PDO::FETCH_ASSOC)): ?>
                     <li class="list-group-item d-flex justify-content-between">
                         <?= $f['valor'] ?>
                         <a href="?eliminar=<?= $f['id'] ?>" class="btn btn-sm btn-danger">✖</a>
@@ -188,7 +188,7 @@ $diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
                 </form>
 
                 <ul class="list-group">
-                <?php while($b = $bloqueos->fetch_assoc()): ?>
+                <?php while ($b = $bloqueos->fetch(PDO::FETCH_ASSOC)): ?>
                     <li class="list-group-item d-flex justify-content-between">
                         <?= $b['valor'] ?>
                         <a href="?eliminar=<?= $b['id'] ?>" class="btn btn-sm btn-danger">✖</a>
@@ -315,5 +315,6 @@ $diasHabilitados = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 </body>
 </html>
+
 
 
