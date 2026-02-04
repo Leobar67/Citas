@@ -45,7 +45,7 @@ foreach ($resultado as $c) {
             <td>{$c['nombre']}</td>
             <td>{$c['telefono']}</td>
             <td>{$c['programa']}</td>
-            <td>{$c['tramite']}</td>
+            <td>{$tramites[$c['tramite']]}</td>
             <td>{$c['fecha']}</td>
             <td>{$c['hora']}</td>
             <td>{$c['estatus']}</td>
@@ -54,4 +54,5 @@ foreach ($resultado as $c) {
 
 echo "</table>";
 exit;
+
 
