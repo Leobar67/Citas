@@ -221,24 +221,29 @@ document.getElementById("buscador").addEventListener("keyup", function () {
 });
 
 /* CLASE SEGÚN ESTATUS */
-function clasePorEstatus(estatus) {
-    return {
-        'Pendiente': 'estatus-pendiente',
-        'Se presentó': 'estatus-presento',
-        'No se presentó': 'estatus-no-presento',
-        'Reagendado': 'estatus-reagendado'
-    }[estatus];
+function claseEstatus($estatus) {
+    switch ($estatus) {
+        case 'Se presentó':
+            return 'estatus-presento';
+        case 'No se presentó':
+            return 'estatus-no-presento';
+        case 'Reagendado':
+            return 'estatus-reagendado';
+        default:
+            return 'estatus-pendiente';
+    }
 }
 
+
 /* ACTUALIZAR ESTATUS + COLOR EN VIVO */
-function actualizarEstatus(id, estatus) {
+function actualizarEstatus(id, estatus, el) {
     fetch("php/actualizar_estatus.php", {
         method: "POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `id=${id}&estatus=${estatus}`
     });
 
-    const contenedor = event.target.closest('.card, tr');
+    const contenedor = el.closest('.card, tr');
 
     contenedor.classList.remove(
         'estatus-pendiente',
@@ -265,23 +270,12 @@ function eliminarCita(id) {
         else alert("Error");
     });
 }
-    function claseEstatus($estatus) {
-    switch ($estatus) {
-        case 'Se presentó':
-            return 'estatus-presento';
-        case 'No se presentó':
-            return 'estatus-no-presento';
-        case 'Reagendado':
-            return 'estatus-reagendado';
-        default:
-            return 'estatus-pendiente';
-    }
-}
 </script>
 
 
 </body>
 </html>
+
 
 
 
