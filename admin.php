@@ -140,7 +140,7 @@ $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 
 <div class="d-flex gap-2">
 <select class="form-select"
-        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value)">
+        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)"
 <?php
 $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 foreach ($estatus as $e):
@@ -186,7 +186,7 @@ Eliminar
 <td><?= $c['hora'] ?></td>
 <td>
 <select class="form-select form-select-sm"
-        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value)">
+        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)"
 <?php foreach ($estatus as $e): ?>
 <option <?= $c['estatus']===$e?'selected':'' ?>><?= $e ?></option>
 <?php endforeach; ?>
@@ -275,6 +275,7 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
 
 
 
