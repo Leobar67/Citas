@@ -126,59 +126,38 @@ body {
     display: flex;
     flex-direction: column;
 }
-/* ===== TARJETAS ===== */
+/* ===== ESTATUS TARJETAS ===== */
 .card.estatus-pendiente {
-    border-left: 6px solid #ff9800;
-    background-color: #fff3e0;
+    background-color: #e2e3e5 !important;
 }
 
 .card.estatus-presento {
-    border-left: 6px solid #2e7d32;
-    background-color: #e8f5e9;
+    background-color: #d1e7dd !important;
 }
 
 .card.estatus-no-presento {
-    border-left: 6px solid #c62828;
-    background-color: #fdecea;
+    background-color: #f8d7da !important;
 }
 
 .card.estatus-reagendado {
-    border-left: 6px solid #0277bd;
-    background-color: #e1f5fe;
+    background-color: #fff3cd !important;
 }
 
-/* ===== TABLA ===== */
-tr.estatus-pendiente td {
-    background-color: #fff3e0 !important;
+/* ===== ESTATUS TABLA (IMPORTANTE) ===== */
+tr.estatus-pendiente > td {
+    background-color: #e2e3e5 !important;
 }
 
-tr.estatus-presento td {
-    background-color: #e8f5e9 !important;
+tr.estatus-presento > td {
+    background-color: #d1e7dd !important;
 }
 
-tr.estatus-no-presento td {
-    background-color: #fdecea !important;
+tr.estatus-no-presento > td {
+    background-color: #f8d7da !important;
 }
 
-tr.estatus-reagendado td {
-    background-color: #e1f5fe !important;
-}
-
-/* BORDE IZQUIERDO EN TABLA */
-tr.estatus-pendiente td:first-child {
-    border-left: 6px solid #ff9800;
-}
-
-tr.estatus-presento td:first-child {
-    border-left: 6px solid #2e7d32;
-}
-
-tr.estatus-no-presento td:first-child {
-    border-left: 6px solid #c62828;
-}
-
-tr.estatus-reagendado td:first-child {
-    border-left: 6px solid #0277bd;
+tr.estatus-reagendado > td {
+    background-color: #fff3cd !important;
 }
 
 
