@@ -40,12 +40,14 @@ $citas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 
 function claseEstatus($estatus) {
+    $estatus = trim(mb_strtolower($estatus));
+
     switch ($estatus) {
-        case 'Se presentó':
+        case 'se presentó':
             return 'estatus-presento';
-        case 'No se presentó':
+        case 'no se presentó':
             return 'estatus-no-presento';
-        case 'Reagendado':
+        case 'reagendado':
             return 'estatus-reagendado';
         default:
             return 'estatus-pendiente';
@@ -236,18 +238,19 @@ document.getElementById("buscador").addEventListener("keyup", function () {
 
 /* CLASE SEGÚN ESTATUS */
 function clasePorEstatus(estatus) {
+    estatus = estatus.trim().toLowerCase();
+
     switch (estatus) {
-        case 'Se presentó':
+        case 'se presentó':
             return 'estatus-presento';
-        case 'No se presentó':
+        case 'no se presentó':
             return 'estatus-no-presento';
-        case 'Reagendado':
+        case 'reagendado':
             return 'estatus-reagendado';
         default:
             return 'estatus-pendiente';
     }
 }
-
 
 /* ACTUALIZAR ESTATUS + COLOR EN VIVO */
 function actualizarEstatus(id, estatus, el) {
@@ -289,6 +292,7 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
 
 
 
