@@ -7,6 +7,7 @@ if (!isset($_SESSION['admin'])) {
 
 include("conexion.php");
 
+/* TRÁMITES */
 $tramites = [
     1 => 'Rec T TSU',
     2 => 'Rec T Ingeniería',
@@ -34,11 +35,12 @@ if ($filtroFecha) {
     $stmt->execute();
 }
 
-/* IMPORTANTE: traer TODO en un arreglo */
 $citas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-/* ESTATUS DISPONIBLES */
-$estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 
+/* ESTATUS */
+$estatusLista = ['Pendiente','Se presentó','No se presentó','Reagendado'];
+
+/* CLASE CSS SEGÚN ESTATUS */
 function claseEstatus($estatus) {
     $estatus = trim(mb_strtolower($estatus));
 
@@ -53,7 +55,6 @@ function claseEstatus($estatus) {
             return 'estatus-pendiente';
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -82,7 +83,6 @@ function claseEstatus($estatus) {
 
 <!-- FILTROS -->
 <div class="row mb-4 g-3 align-items-end">
-
     <div class="col-md-4">
         <input type="text" id="buscador" class="form-control"
                placeholder="Buscar por matrícula, nombre, teléfono o trámite">
@@ -115,29 +115,7 @@ function claseEstatus($estatus) {
     </div>
 </div>
 
-<!-- BOTONES EXCEL -->
-<div class="row mb-4 g-3">
-    <div class="col-md-6">
-        <a href="php/exportar_excel.php" class="btn btn-success w-100">
-            📥 Descargar TODAS las citas
-        </a>
-    </div>
-
-    <div class="col-md-6">
-        <?php if ($filtroFecha): ?>
-        <a href="php/exportar_excel.php?fecha=<?= $filtroFecha ?>"
-           class="btn btn-utnc w-100">
-            📅 Descargar citas del <?= $filtroFecha ?>
-        </a>
-        <?php else: ?>
-        <button class="btn btn-secondary w-100" disabled>
-            📅 Selecciona una fecha para descargar
-        </button>
-        <?php endif; ?>
-    </div>
-</div>
-
-<!-- ================== VISTA TARJETAS ================== -->
+<!-- ================== TARJETAS ================== -->
 <?php if ($vista === 'cards'): ?>
 <div class="row">
 <?php foreach ($citas as $c): ?>
@@ -145,7 +123,7 @@ function claseEstatus($estatus) {
 <div class="card shadow h-100 <?= claseEstatus($c['estatus']) ?>">
 <div class="card-body">
 
-<h5 class="text-utnc fw-bold"><?= htmlspecialchars($c['nombre']) ?></h5>
+<h5 class="fw-bold"><?= htmlspecialchars($c['nombre']) ?></h5>
 
 <p><strong>Matrícula:</strong> <?= $c['matricula'] ?></p>
 <p><strong>Teléfono:</strong> <?= $c['telefono'] ?></p>
@@ -154,22 +132,17 @@ function claseEstatus($estatus) {
 <p><strong>Fecha:</strong> <?= $c['fecha'] ?></p>
 <p><strong>Hora:</strong> <?= $c['hora'] ?></p>
 
-<div class="d-flex gap-2">
-<select class="form-select"
-        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)"
-<?php
-$estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
-foreach ($estatus as $e):
-?>
+<select class="form-select mb-2"
+        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)">
+<?php foreach ($estatusLista as $e): ?>
 <option <?= $c['estatus']===$e?'selected':'' ?>><?= $e ?></option>
 <?php endforeach; ?>
 </select>
 
-<button class="btn btn-danger"
+<button class="btn btn-danger w-100"
         onclick="eliminarCita(<?= $c['id'] ?>)">
 Eliminar
 </button>
-</div>
 
 </div>
 </div>
@@ -178,10 +151,10 @@ Eliminar
 </div>
 <?php endif; ?>
 
-<!-- ================== VISTA TABLA ================== -->
+<!-- ================== TABLA ================== -->
 <?php if ($vista === 'tabla'): ?>
 <div class="table-responsive">
-<table class="table table-bordered table-striped table-utnc">
+<table class="table table-bordered table-utnc">
 <thead>
 <tr>
 <th>Matrícula</th><th>Nombre</th><th>Teléfono</th>
@@ -202,8 +175,8 @@ Eliminar
 <td><?= $c['hora'] ?></td>
 <td>
 <select class="form-select form-select-sm"
-        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)"
-<?php foreach ($estatus as $e): ?>
+        onchange="actualizarEstatus(<?= $c['id'] ?>, this.value, this)">
+<?php foreach ($estatusLista as $e): ?>
 <option <?= $c['estatus']===$e?'selected':'' ?>><?= $e ?></option>
 <?php endforeach; ?>
 </select>
@@ -252,7 +225,7 @@ function clasePorEstatus(estatus) {
     }
 }
 
-/* ACTUALIZAR ESTATUS + COLOR EN VIVO */
+/* ACTUALIZAR ESTATUS */
 function actualizarEstatus(id, estatus, el) {
     fetch("php/actualizar_estatus.php", {
         method: "POST",
@@ -261,18 +234,11 @@ function actualizarEstatus(id, estatus, el) {
     });
 
     const contenedor = el.closest('.card, tr');
-
-    contenedor.classList.remove(
-        'estatus-pendiente',
-        'estatus-presento',
-        'estatus-no-presento',
-        'estatus-reagendado'
-    );
-
+    contenedor.className = contenedor.className.replace(/estatus-\S+/g, '');
     contenedor.classList.add(clasePorEstatus(estatus));
 }
 
-/* ELIMINAR CITA */
+/* ELIMINAR */
 function eliminarCita(id) {
     if (!confirm("¿Eliminar cita definitivamente?")) return;
 
@@ -280,24 +246,9 @@ function eliminarCita(id) {
         method: "POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `id=${id}`
-    })
-    .then(r => r.text())
-    .then(r => {
-        if (r === "ok") location.reload();
-        else alert("Error");
-    });
+    }).then(() => location.reload());
 }
 </script>
 
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
