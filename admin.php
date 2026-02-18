@@ -126,7 +126,7 @@ $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
 <div class="row">
 <?php foreach ($citas as $c): ?>
 <div class="col-md-6 col-lg-4 mb-4 cita">
-<div class="card shadow h-100">
+<div class="card shadow h-100 <?= claseEstatus($c['estatus']) ?>">
 <div class="card-body">
 
 <h5 class="text-utnc fw-bold"><?= htmlspecialchars($c['nombre']) ?></h5>
@@ -176,7 +176,7 @@ Eliminar
 </thead>
 <tbody>
 <?php foreach ($citas as $c): ?>
-<tr class="cita">
+<tr class="cita <?= claseEstatus($c['estatus']) ?>">
 <td><?= $c['matricula'] ?></td>
 <td><?= $c['nombre'] ?></td>
 <td><?= $c['telefono'] ?></td>
@@ -212,6 +212,7 @@ Eliminar
 </footer>
 
 <script>
+/* BUSCADOR */
 document.getElementById("buscador").addEventListener("keyup", function () {
     const t = this.value.toLowerCase();
     document.querySelectorAll(".cita").forEach(c =>
@@ -219,29 +220,57 @@ document.getElementById("buscador").addEventListener("keyup", function () {
     );
 });
 
+/* CLASE SEGÚN ESTATUS */
+function clasePorEstatus(estatus) {
+    return {
+        'Pendiente': 'estatus-pendiente',
+        'Se presentó': 'estatus-presento',
+        'No se presentó': 'estatus-no-presento',
+        'Reagendado': 'estatus-reagendado'
+    }[estatus];
+}
+
+/* ACTUALIZAR ESTATUS + COLOR EN VIVO */
 function actualizarEstatus(id, estatus) {
     fetch("php/actualizar_estatus.php", {
         method: "POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `id=${id}&estatus=${estatus}`
     });
+
+    const contenedor = event.target.closest('.card, tr');
+
+    contenedor.classList.remove(
+        'estatus-pendiente',
+        'estatus-presento',
+        'estatus-no-presento',
+        'estatus-reagendado'
+    );
+
+    contenedor.classList.add(clasePorEstatus(estatus));
 }
 
+/* ELIMINAR CITA */
 function eliminarCita(id) {
     if (!confirm("¿Eliminar cita definitivamente?")) return;
+
     fetch("php/eliminar_cita.php", {
         method: "POST",
         headers: {'Content-Type':'application/x-www-form-urlencoded'},
         body: `id=${id}`
-    }).then(r=>r.text()).then(r=>{
-        if(r==="ok") location.reload();
+    })
+    .then(r => r.text())
+    .then(r => {
+        if (r === "ok") location.reload();
         else alert("Error");
     });
 }
 </script>
 
+
 </body>
 </html>
+
 
 
 
