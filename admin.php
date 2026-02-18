@@ -38,6 +38,20 @@ if ($filtroFecha) {
 $citas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 /* ESTATUS DISPONIBLES */
 $estatus = ['Pendiente','Se presentó','No se presentó','Reagendado'];
+
+function claseEstatus($estatus) {
+    switch ($estatus) {
+        case 'Se presentó':
+            return 'estatus-presento';
+        case 'No se presentó':
+            return 'estatus-no-presento';
+        case 'Reagendado':
+            return 'estatus-reagendado';
+        default:
+            return 'estatus-pendiente';
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -221,8 +235,8 @@ document.getElementById("buscador").addEventListener("keyup", function () {
 });
 
 /* CLASE SEGÚN ESTATUS */
-function claseEstatus($estatus) {
-    switch ($estatus) {
+function clasePorEstatus(estatus) {
+    switch (estatus) {
         case 'Se presentó':
             return 'estatus-presento';
         case 'No se presentó':
@@ -275,6 +289,7 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
 
 
 
