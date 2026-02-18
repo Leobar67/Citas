@@ -44,10 +44,12 @@ if ($horaSel >= strtotime("13:00") && $horaSel < strtotime("14:00")) {
 }
 
 /* ================== CITA EXISTENTE ================== */
+/* ================== CITA EXISTENTE ================== */
 $stmt = $conexion->prepare(
-    "SELECT id, fecha, hora FROM citas
-     WHERE matricula = :matricula AND estatus = 'Pendiente'
-     
+    "SELECT id, fecha, hora 
+     FROM citas 
+     WHERE matricula = :matricula 
+       AND estatus = 'Pendiente'"
 );
 $stmt->execute([':matricula' => $matricula]);
 $citaExistente = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -115,6 +117,7 @@ if ($reagendar) {
 } else {
     respuesta('success', '📅 Cita agendada correctamente');
 }
+
 
 
 
