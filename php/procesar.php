@@ -109,4 +109,10 @@ $stmt->execute([
     ':hora'      => $hora
 ]);
 
-respuesta('success', '✅ Cita reagendada correctamente');
+if ($reagendar) {
+    respuesta('success', '🔁 Cita reagendada correctamente');
+} else {
+    respuesta('success', '📅 Cita agendada correctamente');
+}
+--------
+
