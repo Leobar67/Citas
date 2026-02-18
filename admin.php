@@ -265,11 +265,24 @@ function eliminarCita(id) {
         else alert("Error");
     });
 }
+    function claseEstatus($estatus) {
+    switch ($estatus) {
+        case 'Se presentó':
+            return 'estatus-presento';
+        case 'No se presentó':
+            return 'estatus-no-presento';
+        case 'Reagendado':
+            return 'estatus-reagendado';
+        default:
+            return 'estatus-pendiente';
+    }
+}
 </script>
 
 
 </body>
 </html>
+
 
 
 
