@@ -288,7 +288,8 @@ $tramitesHabilitados = $conexion->query(
 </div>
 
 <!-- ================= FILA 3 ================= -->
-
+<div class="row g-4 justify-content-center">
+    
     <!-- MESES HABILITADOS -->
     <div class="col-md-8 col-lg-6">
         <div class="card shadow h-100 card-config">
@@ -361,14 +362,13 @@ $tramitesHabilitados = $conexion->query(
                 </div>
             <?php endforeach; ?>
 
-            <button class="btn btn-primary mt-3 w-100">
+            <button class="btn btn-utnc mt-3 w-100">
                 Guardar trámites habilitados
             </button>
             </form>
         </div>
     </div>
 </div>
-<div class="row g-4 justify-content-center">
 
 </div>
 
@@ -380,6 +380,7 @@ $tramitesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
