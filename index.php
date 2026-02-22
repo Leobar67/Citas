@@ -146,7 +146,7 @@ Promise.all([
     fetch('php/obtener_horarios_bloqueados.php').then(r=>r.json()),
     fetch('php/obtener_dias_habiles.php').then(r=>r.json()),
     fetch('php/obtener_turno.php').then(r=>r.json()),
-    fetch('php/obtener_meses_habiles.php').then(r=>r.json())
+    fetch('php/obtener_meses_habiles.php').then(r=>r.json()),
     fetch('php/obtener_limite.php').then(r=>r.json())
 ]).then(([f,b,d,t,m,l])=>{
     festivos = f;
@@ -270,6 +270,7 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
 
