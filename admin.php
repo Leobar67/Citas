@@ -114,11 +114,8 @@ function claseEstatus($estatus) {
         <a href="admin.php" class="btn btn-secondary w-100">Ver todas</a>
     </div>
     <div class="col-md-2">
-    <a href="php/exportar_excel.php<?= $filtroFecha ? '?fecha='.$filtroFecha : '' ?>"
-       class="btn btn-success w-100">
-       Exportar a Excel
-    </a>
-</div>
+    <a href="php/exportar_excel.php<?= $filtroFecha ? '?fecha='.$filtroFecha : '' ?>"class="btn btn-success w-100">Exportar a Excel</a>
+    </div>
 </div>
 
 <!-- ================== TARJETAS ================== -->
@@ -258,4 +255,5 @@ function eliminarCita(id) {
 
 </body>
 </html>
+
 
