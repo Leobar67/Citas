@@ -44,7 +44,6 @@ if ($horaSel >= strtotime("13:00") && $horaSel < strtotime("14:00")) {
 }
 
 /* ================== CITA EXISTENTE ================== */
-/* ================== CITA EXISTENTE ================== */
 $stmt = $conexion->prepare(
     "SELECT id, fecha, hora 
      FROM citas 
@@ -54,11 +53,46 @@ $stmt = $conexion->prepare(
 $stmt->execute([':matricula' => $matricula]);
 $citaExistente = $stmt->fetch(PDO::FETCH_ASSOC);
 
+/* ================== VALIDAR LÍMITE DIARIO ================== */
+/* ⚠ EXCLUYE REAGENDADAS */
+$limiteStmt = $conexion->prepare("
+    SELECT valor 
+    FROM configuracion 
+    WHERE tipo = 'limite_citas_diarias'
+    LIMIT 1
+");
+$limiteStmt->execute();
+$limite = $limiteStmt->fetchColumn();
+if (!$limite) $limite = 20;
+
+$sqlConteo = "
+    SELECT COUNT(*) 
+    FROM citas 
+    WHERE fecha = :fecha
+    AND estatus != 'Reagendado'
+";
+
+$paramsConteo = [':fecha' => $fecha];
+
+/* 👇 Si es reagendar, ignora su cita actual en el conteo */
+if ($citaExistente && $reagendar) {
+    $sqlConteo .= " AND id != :id";
+    $paramsConteo[':id'] = $citaExistente['id'];
+}
+
+$stmt = $conexion->prepare($sqlConteo);
+$stmt->execute($paramsConteo);
+$totalDia = $stmt->fetchColumn();
+
+if ($totalDia >= $limite) {
+    respuesta('danger', 'Este día ya alcanzó el límite de citas.');
+}
+
 /* ================== HORA OCUPADA ================== */
-/* 👇 IGNORAR cita anterior SI es reagendar */
 $sqlHora = "
     SELECT id FROM citas
     WHERE fecha = :fecha AND hora = :hora
+    AND estatus != 'Reagendado'
 ";
 $params = [
     ':fecha' => $fecha,
@@ -117,8 +151,3 @@ if ($reagendar) {
 } else {
     respuesta('success', '📅 Cita agendada correctamente, traer copia de credencial');
 }
-
-
-
-
-
