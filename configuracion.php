@@ -169,7 +169,7 @@ $tramitesHabilitados = $conexion->query(
 
     <!-- FESTIVOS -->
     <div class="col-md-6">
-        <div class="card shadow h-100">
+        <div class="card shadow h-100 card-config">
             <div class="card-body">
                 <h5 class="text-utnc fw-bold">Días festivos</h5>
 
@@ -192,7 +192,7 @@ $tramitesHabilitados = $conexion->query(
 
     <!-- HORARIOS BLOQUEADOS -->
     <div class="col-md-6">
-        <div class="card shadow h-100">
+        <div class="card shadow h-100 card-config">
             <div class="card-body">
                 <h5 class="text-utnc fw-bold">Horarios restringidos</h5>
 
@@ -227,7 +227,7 @@ $tramitesHabilitados = $conexion->query(
 
     <!-- HORARIO DEL TURNO -->
     <div class="col-md-6">
-        <div class="card shadow h-100">
+        <div class="card shadow h-100 card-config">
             <div class="card-body">
                 <h5 class="text-utnc fw-bold">Horario del turno</h5>
 
@@ -250,7 +250,7 @@ $tramitesHabilitados = $conexion->query(
 
     <!-- DÍAS HÁBILES -->
     <div class="col-md-6">
-        <div class="card shadow h-100">
+        <div class="card shadow h-100 card-config">
             <div class="card-body">
                 <h5 class="text-utnc fw-bold">Días habilitados</h5>
 
@@ -380,6 +380,7 @@ $tramitesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
