@@ -100,6 +100,22 @@ if (isset($_POST['guardar_tramites'])) {
     }
 }
 
+/* LIMITE DE CITAS DIARIAS */
+if (isset($_POST['limite_citas'])) {
+
+    $conexion->exec(
+        "DELETE FROM configuracion WHERE tipo = 'limite_citas_diarias'"
+    );
+
+    $stmt = $conexion->prepare(
+        "INSERT INTO configuracion (tipo, valor) VALUES ('limite_citas_diarias', :valor)"
+    );
+
+    $stmt->execute([
+        ':valor' => (int)$_POST['limite_citas']
+    ]);
+}    
+
     header("Location: configuracion.php");
     exit;
 }
@@ -143,6 +159,11 @@ $mesesHabilitados = $conexion->query(
 $tramitesHabilitados = $conexion->query(
     "SELECT valor FROM configuracion WHERE tipo = 'tramite_habilitado'"
 )->fetchAll(PDO::FETCH_COLUMN);
+
+$limiteCitas = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'limite_citas_diarias' LIMIT 1"
+)->fetchColumn() ?: 20; // valor por defecto
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -367,6 +388,30 @@ $tramitesHabilitados = $conexion->query(
         </div>
     </div>
 </div>
+    <div class="col-md-8 col-lg-6 mt-4">
+    <div class="card shadow h-100 card-config">
+        <div class="card-body">
+            <h5 class="text-utnc fw-bold text-center">
+                Límite de citas diarias
+            </h5>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <input type="number"
+                           name="limite_citas"
+                           class="form-control"
+                           min="1"
+                           value="<?= $limiteCitas ?>"
+                           required>
+                </div>
+
+                <button class="btn btn-utnc w-100">
+                    Guardar límite
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -378,6 +423,7 @@ $tramitesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
