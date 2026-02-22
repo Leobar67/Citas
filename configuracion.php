@@ -330,9 +330,7 @@ $tramitesHabilitados = $conexion->query(
 <div class="col-md-8 col-lg-6 mt-4">
     <div class="card shadow h-100 card-config">
         <div class="card-body">
-            <h5 class="text-primary fw-bold text-center">
-                Trámites habilitados
-            </h5>
+            <h5 class="text-utnc fw-bold text-center">Trámites habilitados</h5>
 
             <form method="POST">
             <input type="hidden" name="guardar_tramites" value="1">
@@ -380,6 +378,7 @@ $tramitesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
