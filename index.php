@@ -137,7 +137,8 @@ let bloqueos = [];
 let diasHabiles = [];
 let turnoInicio = "08:00";
 let turnoFin = "15:30";
-let mesesHabiles = [];   
+let mesesHabiles = [];
+let limiteCitas = 20;    
 
 /* CARGAR CONFIGURACIÓN */
 Promise.all([
@@ -146,13 +147,15 @@ Promise.all([
     fetch('php/obtener_dias_habiles.php').then(r=>r.json()),
     fetch('php/obtener_turno.php').then(r=>r.json()),
     fetch('php/obtener_meses_habiles.php').then(r=>r.json())
-]).then(([f,b,d,t,m])=>{
+    fetch('php/obtener_limite.php').then(r=>r.json())
+]).then(([f,b,d,t,m,l])=>{
     festivos = f;
     bloqueos = b;
     diasHabiles = d.map(Number);
     turnoInicio = t.inicio;
     turnoFin = t.fin;
     mesesHabiles = m;
+    limiteCitas = l.limite;
 
     iniciarCalendario();
 });
@@ -183,11 +186,13 @@ function iniciarCalendario() {
 
 /* HORAS */
 function cargarHoras() {
+
     const fecha = fechaInput.value;
 
     fetch(`php/obtener_horas.php?fecha=${fecha}`)
     .then(r=>r.json())
     .then(ocupadas=>{
+
         horaSelect.innerHTML = '<option value="">Seleccione una hora</option>';
 
         const [hi,mi] = turnoInicio.split(':').map(Number);
@@ -196,7 +201,15 @@ function cargarHoras() {
         let inicio = hi*60 + mi;
         let fin = hf*60 + mf;
 
-        for (let min=inicio; min<=fin; min+=5) {
+        let totalMinutos = fin - inicio;
+
+        // 👇 INTERVALO AUTOMÁTICO
+        let intervalo = Math.floor(totalMinutos / limiteCitas);
+
+        // seguridad mínima (evita división rara)
+        if (intervalo < 1) intervalo = 1;
+
+        for (let min = inicio; min <= fin; min += intervalo) {
 
             let h = Math.floor(min/60);
             let m = String(min%60).padStart(2,'0');
@@ -206,16 +219,18 @@ function cargarHoras() {
                 let [i,f]=r.split('-');
                 return valor>=i && valor<f;
             });
+
             if (bloqueado) continue;
 
-            let op=document.createElement('option');
-            op.value=valor;
-            op.textContent=`${h%12||12}:${m} ${h>=12?'PM':'AM'}`;
+            let op = document.createElement('option');
+            op.value = valor;
+            op.textContent = `${h%12||12}:${m} ${h>=12?'PM':'AM'}`;
 
             if (ocupadas.includes(valor)) {
-                op.disabled=true;
-                op.textContent+=' (No disponible)';
+                op.disabled = true;
+                op.textContent += ' (No disponible)';
             }
+
             horaSelect.appendChild(op);
         }
     });
@@ -255,6 +270,7 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
 
