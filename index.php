@@ -1,3 +1,11 @@
+<?php
+require_once "conexion.php";
+
+$tramitesHabilitados = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'tramite_habilitado'"
+)->fetchAll(PDO::FETCH_COLUMN);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -234,6 +242,7 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
 
