@@ -139,6 +139,10 @@ $diasHabilitados = $conexion->query(
 $mesesHabilitados = $conexion->query(
     "SELECT valor FROM configuracion WHERE tipo = 'mes_habil'"
 )->fetchAll(PDO::FETCH_COLUMN);
+
+$tramitesHabilitados = $conexion->query(
+    "SELECT valor FROM configuracion WHERE tipo = 'tramite_habilitado'"
+)->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -322,6 +326,50 @@ $mesesHabilitados = $conexion->query(
         </div>
     </div>
 
+    <!-- TRÁMITES HABILITADOS -->
+<div class="col-md-8 col-lg-6 mt-4">
+    <div class="card shadow border border-2 border-primary">
+        <div class="card-body">
+            <h5 class="text-primary fw-bold text-center">
+                Trámites habilitados
+            </h5>
+
+            <form method="POST">
+            <input type="hidden" name="guardar_tramites" value="1">
+
+            <?php
+            $listaTramites = [
+                1 => 'Recoger título TSU',
+                2 => 'Recoger título Ingeniería',
+                3 => 'Recoger título Licenciatura',
+                4 => 'Tramitar título TSU',
+                5 => 'Tramitar título Ingeniería',
+                6 => 'Tramitar título Licenciatura',
+                7 => 'Recoger papelería'
+            ];
+
+            foreach ($listaTramites as $id => $nombre):
+            ?>
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="tramites[]"
+                           value="<?= $id ?>"
+                           <?= in_array((string)$id, $tramitesHabilitados, true) ? 'checked' : '' ?>>
+                    <label class="form-check-label">
+                        <?= $nombre ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+
+            <button class="btn btn-primary mt-3 w-100">
+                Guardar trámites habilitados
+            </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 </div>
 
 </main>
@@ -332,6 +380,7 @@ $mesesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
