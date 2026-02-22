@@ -82,6 +82,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+    /* TRÁMITES HABILITADOS */
+if (isset($_POST['guardar_tramites'])) {
+
+    $conexion->exec(
+        "DELETE FROM configuracion WHERE tipo = 'tramite_habilitado'"
+    );
+
+    if (!empty($_POST['tramites'])) {
+        $stmt = $conexion->prepare(
+            "INSERT INTO configuracion (tipo, valor) VALUES ('tramite_habilitado', :valor)"
+        );
+
+        foreach ($_POST['tramites'] as $tramite) {
+            $stmt->execute([':valor' => $tramite]);
+        }
+    }
+}
 
     header("Location: configuracion.php");
     exit;
@@ -315,6 +332,7 @@ $mesesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
