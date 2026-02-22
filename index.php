@@ -191,9 +191,22 @@ function cargarHoras() {
 
     fetch(`php/obtener_horas.php?fecha=${fecha}`)
     .then(r=>r.json())
-    .then(ocupadas=>{
+    .then(data=>{
+
+        const ocupadas = data.horas;   // ← ahora viene dentro del objeto
+        const totalDia = data.total;   // ← total de citas activas
+        const limite = data.limite;    // ← límite dinámico desde BD
 
         horaSelect.innerHTML = '<option value="">Seleccione una hora</option>';
+
+        // 🚨 BLOQUEAR COMPLETAMENTE EL DÍA SI LLEGÓ AL LÍMITE
+        if (totalDia >= limite) {
+            horaSelect.innerHTML = '<option value="">Cupo lleno este día</option>';
+            horaSelect.disabled = true;
+            return;
+        } else {
+            horaSelect.disabled = false;
+        }
 
         const [hi,mi] = turnoInicio.split(':').map(Number);
         const [hf,mf] = turnoFin.split(':').map(Number);
@@ -203,10 +216,9 @@ function cargarHoras() {
 
         let totalMinutos = fin - inicio;
 
-        // 👇 INTERVALO AUTOMÁTICO
-        let intervalo = Math.floor(totalMinutos / limiteCitas);
+        // 👇 INTERVALO AUTOMÁTICO BASADO EN EL LÍMITE REAL
+        let intervalo = Math.floor(totalMinutos / limite);
 
-        // seguridad mínima (evita división rara)
         if (intervalo < 1) intervalo = 1;
 
         for (let min = inicio; min <= fin; min += intervalo) {
@@ -270,6 +282,7 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
 
