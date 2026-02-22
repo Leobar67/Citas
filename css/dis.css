@@ -159,5 +159,8 @@ tr.estatus-no-presento > td {
 tr.estatus-reagendado > td {
     background-color: #fff3cd !important;
 }
+.card-config {
+    border: 2px solid #198754; /* verde bootstrap success */
+}
 
 
