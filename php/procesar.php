@@ -115,8 +115,9 @@ $stmt->execute([
 if ($reagendar) {
     respuesta('success', '🔁 Cita reagendada correctamente');
 } else {
-    respuesta('success', '📅 Cita agendada correctamente');
+    respuesta('success', '📅 Cita agendada correctamente, traer copia de credencial');
 }
+
 
 
 
