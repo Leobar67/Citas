@@ -288,11 +288,10 @@ $tramitesHabilitados = $conexion->query(
 </div>
 
 <!-- ================= FILA 3 ================= -->
-<div class="row g-4 justify-content-center">
 
     <!-- MESES HABILITADOS -->
     <div class="col-md-8 col-lg-6">
-        <div class="card shadow border border-2 border-success">
+        <div class="card shadow h-100 card-config">
             <div class="card-body">
                 <h5 class="text-utnc fw-bold text-center">Meses habilitados</h5>
 
@@ -328,7 +327,7 @@ $tramitesHabilitados = $conexion->query(
 
     <!-- TRÁMITES HABILITADOS -->
 <div class="col-md-8 col-lg-6 mt-4">
-    <div class="card shadow border border-2 border-primary">
+    <div class="card shadow h-100 card-config">
         <div class="card-body">
             <h5 class="text-primary fw-bold text-center">
                 Trámites habilitados
@@ -369,6 +368,7 @@ $tramitesHabilitados = $conexion->query(
         </div>
     </div>
 </div>
+<div class="row g-4 justify-content-center">
 
 </div>
 
@@ -380,6 +380,7 @@ $tramitesHabilitados = $conexion->query(
 
 </body>
 </html>
+
 
 
 
