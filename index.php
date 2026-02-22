@@ -67,15 +67,28 @@ $tramitesHabilitados = $conexion->query(
 
 <div class="mb-3">
 <label for="tramite" class="form-label">Trámite</label>
-<select  id="tramite" name="tramite" class="form-select form-select-lg" required>
-<option value="#">Seleccione</option>
-<option value="1">Recoger título Técnico Superior Universitario</option>
-<option value="2">Recoger título Ingeniería</option>
-<option value="3">Recoger título Licenciatura</option>
-<option value="4">Tramitar título Técnico Superior Universitario</option>
-<option value="5">Tramitar título Ingeniería</option>
-<option value="6">Tramitar título Licenciatura</option>
-<option value="7">Recoger papelería</option>
+<select id="tramite" name="tramite" class="form-select form-select-lg" required>
+<option value="">Seleccione</option>
+
+<?php
+$listaTramites = [
+    1 => 'Recoger título Técnico Superior Universitario',
+    2 => 'Recoger título Ingeniería',
+    3 => 'Recoger título Licenciatura',
+    4 => 'Tramitar título Técnico Superior Universitario',
+    5 => 'Tramitar título Ingeniería',
+    6 => 'Tramitar título Licenciatura',
+    7 => 'Recoger papelería'
+];
+
+foreach ($listaTramites as $id => $nombre):
+    if (in_array((string)$id, $tramitesHabilitados, true)):
+?>
+<option value="<?= $id ?>"><?= $nombre ?></option>
+<?php
+    endif;
+endforeach;
+?>
 </select>
 </div>
 
@@ -242,6 +255,7 @@ function mostrar(r){
 
 </body>
 </html>
+
 
 
 
