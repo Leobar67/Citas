@@ -52,7 +52,7 @@ $tramitesHabilitados = $conexion->query(
 
 <div class="col-md-6 mb-3">
 <label for="telefono" class="form-label">Teléfono</label>
-<input id="telefono" name="telefono" type="tel" class="form-control form-control-lg" maxlength="12"pattern="[0-9]{10,12}" inputmode="numeric" required>
+<input id="telefono" name="telefono" type="text" class="form-control form-control-lg" maxlength="12" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 </div>
 </div>
 
