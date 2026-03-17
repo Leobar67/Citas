@@ -151,3 +151,7 @@ if ($reagendar) {
 } else {
     respuesta('success', '📅 Cita agendada correctamente, traer copia de credencial');
 }
+
+if (!preg_match('/^[0-9]{10,12}$/', $telefono)) {
+    respuesta('danger', 'El teléfono debe contener solo números y máximo 12 dígitos');
+}
