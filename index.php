@@ -20,6 +20,7 @@ $tramitesHabilitados = $conexion->query(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
 
     <link rel="stylesheet" href="css/dis.css">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -268,17 +269,76 @@ form.addEventListener('submit', e=>{
 });
 
 function mostrar(r){
+
     mensaje.innerHTML=`
     <div class="alert alert-${r.tipo} alert-dismissible fade show">
         ${r.mensaje}
         <button class="btn-close" data-bs-dismiss="alert"></button>
     </div>`;
+
     if(r.tipo==='success'){
+
+        // 👇 Obtener datos antes de resetear
+        const nombre = document.getElementById('nombre').value;
+        const matricula = document.getElementById('matricula').value;
+        const telefono = document.getElementById('telefono').value;
+        const programa = document.getElementById('programa').value;
+        const tramite = document.getElementById('tramite').selectedOptions[0].text;
+        const fecha = document.getElementById('fecha').value;
+        const hora = document.getElementById('hora').value;
+
+        // 👇 Llenar comprobante
+        document.getElementById('c_nombre').textContent = nombre;
+        document.getElementById('c_matricula').textContent = matricula;
+        document.getElementById('c_telefono').textContent = telefono;
+        document.getElementById('c_programa').textContent = programa;
+        document.getElementById('c_tramite').textContent = tramite;
+        document.getElementById('c_fecha').textContent = fecha;
+        document.getElementById('c_hora').textContent = hora;
+
+        const comprobante = document.getElementById('comprobante');
+        comprobante.style.display = 'block';
+
+        // 👇 Generar imagen
+        html2canvas(comprobante).then(canvas => {
+
+            let link = document.createElement('a');
+            link.download = 'cita.png';
+            link.href = canvas.toDataURL();
+            link.click();
+
+            comprobante.style.display = 'none';
+        });
+
         form.reset();
         horaSelect.innerHTML='<option value="">Seleccione una hora</option>';
     }
 }
 </script>
+
+<div id="comprobante" style="width:400px; padding:20px; background:#fff; border-radius:12px; display:none; font-family:Arial;">
+
+    <h2 style="text-align:center; color:#198754;">Cita Agendada</h2>
+    <hr>
+
+    <p><strong>Nombre:</strong> <span id="c_nombre"></span></p>
+    <p><strong>Matrícula:</strong> <span id="c_matricula"></span></p>
+    <p><strong>Teléfono:</strong> <span id="c_telefono"></span></p>
+    <p><strong>Programa:</strong> <span id="c_programa"></span></p>
+    <p><strong>Trámite:</strong> <span id="c_tramite"></span></p>
+    <p><strong>Fecha:</strong> <span id="c_fecha"></span></p>
+    <p><strong>Hora:</strong> <span id="c_hora"></span></p>
+
+    <hr>
+
+    <p style="text-align:center; font-size:12px;">
+        Presentarse 10 minutos antes <br>
+        Universidad Tecnológica del Norte de Coahuila
+    </p>
+
+</div>
+    
+
 
 </body>
 </html>
